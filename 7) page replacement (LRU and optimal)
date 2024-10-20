@@ -1,0 +1,52 @@
+import java.io.*;
+import java.util.*;
+
+class LRU {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        // Input the number of frames
+        System.out.print("Enter the number of frames: ");
+        int frameCount = Integer.parseInt(reader.readLine());
+
+        // Input the number of pages
+        System.out.print("Enter the number of pages: ");
+        int pageCount = Integer.parseInt(reader.readLine());
+
+        // Input page numbers
+        int[] pages = new int[pageCount];
+        System.out.println("Enter the page numbers:");
+        for (int i = 0; i < pageCount; i++) {
+            pages[i] = Integer.parseInt(reader.readLine());
+        }
+
+        // LRU Page Replacement Logic
+        Set<Integer> memory = new HashSet<>();
+        List<Integer> lru = new ArrayList<>();
+        int pageFaults = 0;
+
+        for (int page : pages) {
+            if (!memory.contains(page)) {
+                // If memory is full, remove the least recently used page
+                if (memory.size() == frameCount) {
+                    int lruPage = lru.remove(0);
+                    memory.remove(lruPage);
+                }
+                // Add the new page to memory
+                memory.add(page);
+                lru.add(page);
+                pageFaults++;
+                System.out.println("Page Fault: " + page);
+            } else {
+                // Page hit; move the accessed page to the end (most recently used)
+                lru.remove(Integer.valueOf(page));
+                lru.add(page);
+            }
+            // Print current frames
+            System.out.println("Current Memory: " + memory);
+        }
+
+        System.out.println("Total Page Faults: " + pageFaults);
+        System.out.println("Total Page Hits: " + (pageCount - pageFaults));
+    }
+}
