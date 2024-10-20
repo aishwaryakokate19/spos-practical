@@ -1,0 +1,80 @@
+import java.util.*;
+
+public class OptimalPageReplacement {
+
+    // Function to find the page to be replaced using the optimal algorithm
+    static int findOptimal(int[] pages, int[] frames, int currentIndex) {
+        int farthest = -1, indexToReplace = -1;
+        for (int i = 0; i < frames.length; i++) {
+            int j = currentIndex;
+            while (j < pages.length && pages[j] != frames[i]) j++;
+            if (j > farthest) {
+                farthest = j;
+                indexToReplace = i;
+            }
+        }
+        return indexToReplace;
+    }
+
+    // Function to simulate the Optimal Page Replacement algorithm
+    static void optimalPageReplacement(int[] pages, int frameSize) {
+        int[] frames = new int[frameSize];
+        Arrays.fill(frames, -1); // Initialize frames with -1
+        int pageFaults = 0;
+
+        for (int i = 0; i < pages.length; i++) {
+            if (!isPageInFrames(frames, pages[i])) {
+                pageFaults++;
+                if (isFrameFull(frames)) {
+                    frames[findOptimal(pages, frames, i + 1)] = pages[i];
+                } else {
+                    for (int j = 0; j < frameSize; j++) {
+                        if (frames[j] == -1) {
+                            frames[j] = pages[i];
+                            break;
+                        }
+                    }
+                }
+            }
+            printFrames(frames);
+        }
+        System.out.println("Total Page Faults: " + pageFaults);
+    }
+
+    // Helper function to check if the page is already in frames
+    static boolean isPageInFrames(int[] frames, int page) {
+        for (int frame : frames) {
+            if (frame == page) return true;
+        }
+        return false;
+    }
+
+    // Helper function to check if frames are full
+    static boolean isFrameFull(int[] frames) {
+        for (int frame : frames) {
+            if (frame == -1) return false;
+        }
+        return true;
+    }
+
+    // Helper function to print the current state of frames
+    static void printFrames(int[] frames) {
+        System.out.println("Frames: " + Arrays.toString(frames).replace("-1", "E"));
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter the number of pages: ");
+        int n = scanner.nextInt();
+        int[] pages = new int[n];
+
+        System.out.print("Enter the page reference string: ");
+        for (int i = 0; i < n; i++) pages[i] = scanner.nextInt();
+
+        System.out.print("Enter the number of frames: ");
+        int frameSize = scanner.nextInt();
+
+        optimalPageReplacement(pages, frameSize);
+    }
+}
