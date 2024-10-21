@@ -1,0 +1,23 @@
+import RPi.GPIO as GPIO import time
+
+GPIO.setmode(GPIO.BCM)
+
+HT み
+
+GPIO.setup(17.GPIO.OUT)
+
+import sys import Adafruit_DHT
+
+while True:
+
+temp
+
+hum, temp Adafruit_DHT.read_retry(11, 4)
+
+print("Humidity=",hum) print("tempreture", temp)
+
+if(temp>32): GPIO.output(17,GPIO.HIGH) time.sleep(1)
+
+else: GPIO.output(17, GPIO.LOW) time.sleep(1)
+
+GPIO.cleanup()
