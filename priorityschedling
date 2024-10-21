@@ -1,0 +1,87 @@
+import java.util.Scanner;
+public class PriorityScheduling {
+static int jtime = 0;
+static int counter;
+static int n;
+static int[] at = new int[20], bt = new int[20], bt_copy = new int[20], ct = new int[20], pt = new
+int[20], sts = new int[20];
+static int[] tat = new int[20], wt = new int[20];
+static String ganttChart = &quot;&quot;;
+static String ganttTimes = &quot;0 &quot;;
+static void process_Ps() {
+int index = -1;
+int highestPriority = Integer.MAX_VALUE;
+for (int i = 0; i &lt; n; i++) {
+if (at[i] &lt;= jtime &amp;&amp; sts[i] != 1) {
+if (pt[i] &lt; highestPriority) {
+highestPriority = pt[i];
+index = i;
+}
+}
+}
+if (index != -1) {
+if (bt[index] &gt; 0) {
+ganttChart += &quot;| P&quot; + (index + 1) + &quot; &quot;;
+jtime++;
+ganttTimes += jtime + &quot; &quot;;
+bt[index]--;
+}
+
+if (bt[index] == 0) {
+ct[index] = jtime;
+sts[index] = 1;
+counter--;
+}
+} else {
+jtime++;
+ganttTimes += jtime + &quot; &quot;;
+}
+}
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+
+System.out.print(&quot;Enter the number of processes: &quot;);
+n = sc.nextInt();
+counter = n;
+for (int i = 0; i &lt; n; i++) {
+System.out.println(&quot;Process &quot; + (i + 1) + &quot;:&quot;);
+System.out.print(&quot;Arrival time: &quot;);
+at[i] = sc.nextInt();
+System.out.print(&quot;Burst time: &quot;);
+bt[i] = sc.nextInt();
+bt_copy[i] = bt[i];
+System.out.print(&quot;Priority: &quot;);
+pt[i] = sc.nextInt();
+sts[i] = 0;
+ct[i] = 0;
+}
+System.out.println(&quot;\nGiven details:&quot;);
+System.out.println(&quot;PID AT BT PT&quot;);
+for (int i = 0; i &lt; n; i++) {
+
+System.out.printf(&quot;P%-7d%-7d%-7d%-7d\n&quot;, (i + 1), at[i], bt_copy[i], pt[i]);
+}
+while (counter != 0) {
+process_Ps();
+}
+double totalTAT = 0, totalWT = 0;
+for (int i = 0; i &lt; n; i++) {
+tat[i] = ct[i] - at[i];
+wt[i] = tat[i] - bt_copy[i];
+totalTAT += tat[i];
+totalWT += wt[i];
+}
+System.out.println(&quot;\nResults:&quot;);
+System.out.println(&quot;PID AT BT PT CT TAT WT&quot;);
+for (int i = 0; i &lt; n; i++) {
+System.out.printf(&quot;P%-7d%-7d%-7d%-7d%-7d%-7d%-7d\n&quot;, (i + 1), at[i], bt_copy[i], pt[i], ct[i],
+tat[i], wt[i]);
+}
+System.out.println(&quot;\nGantt Chart:&quot;);
+System.out.println(ganttChart + &quot;|&quot;);
+System.out.println(ganttTimes);
+System.out.printf(&quot;\nAverage Turnaround Time: %.2f\n&quot;, (totalTAT / n));
+System.out.printf(&quot;Average Waiting Time: %.2f\n&quot;, (totalWT / n));
+sc.close();
+}
+}
