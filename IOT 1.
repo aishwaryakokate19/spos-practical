@@ -1,1 +1,42 @@
 
+int IR 9;
+
+int Led = 13;
+
+void setup() {
+
+// put your setup code here, to run once:
+
+Serial.begin(9600);
+
+Serial.println("welcome");
+
+pinMode(IR, INPUT);
+
+pinMode(Led, OUTPUT);
+
+void loop() {
+
+int sensor_Read=digitalRead(IR);
+
+if (sensor_Read==1)
+
+{
+
+}
+
+digitalWrite(Led, LOW);
+
+Serial.println("object Not detected");
+
+else
+
+{
+
+
+digitalWrite(Led, HIGH); 
+Serial.println("object detected");
+
+
+}
+}
