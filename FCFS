@@ -1,67 +1,78 @@
 import java.util.Scanner;
 
-
 public class FCFS {
-public static void main(String[] args) {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        
+        System.out.println("Enter the number of processes:");
+        int numberOfProcesses = in.nextInt();
+        
+        int pid[] = new int[numberOfProcesses];
+        int bt[] = new int[numberOfProcesses];
+        int ar[] = new int[numberOfProcesses];
+        int ct[] = new int[numberOfProcesses];
+        int ta[] = new int[numberOfProcesses];
+        int wt[] = new int[numberOfProcesses];
 
-System.out.println(&quot;Enter the number of process&quot;);
-Scanner in = new Scanner(System.in);
-int numberOfProcesses = in.nextInt();
+        // Input arrival times and burst times
+        for(int i = 0; i < numberOfProcesses; i++) {
+            System.out.println("Enter process " + (i+1) + " arrival time: ");
+            ar[i] = in.nextInt();
+            System.out.println("Enter process " + (i+1) + " burst time: ");
+            bt[i] = in.nextInt();
+            pid[i] = i + 1;
+        }
 
-int pid[] = new int[numberOfProcesses];
-int bt[] = new int[numberOfProcesses];
-int ar[] = new int[numberOfProcesses];
-int ct[] = new int[numberOfProcesses];
-int ta[] = new int[numberOfProcesses];
-int wt[] = new int[numberOfProcesses];
+        // Sorting based on arrival time
+        for (int i = 0; i < numberOfProcesses; i++) {
+            for (int j = i + 1; j < numberOfProcesses; j++) {
+                if (ar[i] > ar[j]) {
+                    // Swap arrival times
+                    int temp = ar[i];
+                    ar[i] = ar[j];
+                    ar[j] = temp;
 
-for(int i = 0; i &lt; numberOfProcesses; i++) {
-System.out.println(&quot;Enter process &quot; + (i+1) + &quot; arrival time: &quot;);
-ar[i] = in.nextInt();
-System.out.println(&quot;Enter process &quot; + (i+1) + &quot; brust time: &quot;);
-bt[i] = in.nextInt();
-pid[i] = i+1;
-}
-int temp;
+                    // Swap process IDs
+                    temp = pid[i];
+                    pid[i] = pid[j];
+                    pid[j] = temp;
 
-for (int i = 0; i &lt; numberOfProcesses; i++) {
-for (int j = i+1; j &lt; numberOfProcesses; j++) {
+                    // Swap burst times
+                    temp = bt[i];
+                    bt[i] = bt[j];
+                    bt[j] = temp;
+                }
+            }
+        }
 
-if(ar[i] &gt; ar[j]) {
-temp = ar[i];
-ar[i] = ar[j];
-ar[j] = temp;
+        // Calculating completion times, turnaround times, and waiting times
+        ct[0] = bt[0] + ar[0];
+        for (int i = 1; i < numberOfProcesses; i++) {
+            if (ar[i] > ct[i - 1]) {
+                ct[i] = ar[i] + bt[i];
+            } else {
+                ct[i] = ct[i - 1] + bt[i];
+            }
+        }
 
-temp = pid[i];
-pid[i] = pid[j];
-pid[j] = temp;
-temp = bt[i];
-bt[i] = bt[j];
-bt[j] = temp;
-}
-}
-}
+        for (int i = 0; i < numberOfProcesses; i++) {
+            ta[i] = ct[i] - ar[i];  // Turnaround time
+            wt[i] = ta[i] - bt[i];  // Waiting time
+        }
 
-System.out.println();
-ct[0] = bt[0] + ar[0];
-for(int i = 1; i &lt; numberOfProcesses; i++) {
-ct[i] = ct[i - 1] + bt[i];
-}
-for(int i = 0; i &lt; numberOfProcesses; i++) {
-ta[i] = ct[i] - ar[i];
-wt[i] = ta[i] - bt[i];
-}
+        // Output table
+        System.out.println("\nProcess\tAT\tBT\tCT\tTAT\tWT");
+        for (int i = 0; i < numberOfProcesses; i++) {
+            System.out.println("P" + pid[i] + "\t" + ar[i] + "\t" + bt[i] + "\t" + ct[i] + "\t" + ta[i] + "\t" + wt[i]);
+        }
 
-System.out.println(&quot;Process\t\tAT\t\tBT\t\tCT\t\tTAT\t\tWT&quot;);
-for(int i = 0; i &lt; numberOfProcesses; i++) {
-System.out.println(pid[i]+&quot;\t\t\t&quot; + ar[i] + &quot;\t\t&quot; + bt[i]+ &quot;\t\t&quot; + ct[i]+ &quot;\t\t&quot; + ta[i]+ &quot;\t\t&quot; +
-wt[i]);
-}
+        // Gantt chart
+        System.out.println("\nGantt Chart:");
+        for (int i = 0; i < numberOfProcesses; i++) {
+            System.out.print("P" + pid[i] + " ");
+        }
 
-System.out.println(&quot;gantt chart: &quot;);
-for(int i = 0; i &lt; numberOfProcesses; i++) {
-System.out.print(&quot;P&quot; + pid[i] +&quot; &quot;);
-}
+        in.close();
+    }
 }
 
-}
