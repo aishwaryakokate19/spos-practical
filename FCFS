@@ -1,8 +1,6 @@
 import java.util.Scanner;
 
-/**
-* Created by hadiana_sliwa on 2/16/19.
-*/
+
 public class FCFS {
 public static void main(String[] args) {
 
